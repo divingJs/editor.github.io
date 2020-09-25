@@ -1,0 +1,23 @@
+var express = require("express");
+var app = express();
+var http = require("http").createServer(app);
+var io = require("socket.io");
+var cookieParse = require('cookie-parser')();
+var passport = require('passport');
+var passportInit = passport.initialize();
+var passportSession = passport.session();
+var session = require('express-session');
+var MySQLStore = require('express-mysql-session')(session);
+var path = require("path");
+
+exports.express = express;
+exports.app=app;
+exports.http=http;
+exports.io=io;
+exports.cookieParse=cookieParse;
+exports.passport=passport;
+exports.passportInit=passportInit;
+exports.passportSession=passportSession;
+exports.session=session;
+exports.MySQLStore=MySQLStore;
+exports.path=path;
