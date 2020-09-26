@@ -1,0 +1,124 @@
+<div class="contentLogin">
+    <div id="errorLogin"></div>
+     <div class="loginForm" id="lgnForm">
+          <div class="rowLogin"><input type="text" name="user" placeHolder="Usuario"></div>
+          <div class="rowLogin"><input type="password" name="pass" placeHolder="password"></div>
+          <div class="btnLogin" id="btnAceptarLogin">Aceptar</div>
+          <div class="d_create_login" id="lnkcreateLogin">Crear Usuario</div>
+     </div>
+     <div class="userForm d-hidden" id="usrForm">
+          <div class="rowLogin"><input type="text" name="usr_form" placeHolder="Usuario"></div>
+          <div class="rowLogin"><input type="text" name="name_form" placeHolder="Nombre"></div>
+          <div class="rowLogin"><input type="email" name="email_form" placeHolder="Correo"></div>
+          <div class="rowLogin"><input type="password" name="pass_form" placeHolder="Password"></div>
+          <div class="rowLogin"><input type="password" name="confirmPass_form" placeHolder="Confirm Password"></div>
+          <div id="btnAceptCreateUser"></div>
+          <div id="btnIniciarSession"></div>
+     </div>
+      <div d-role="cancelLogin"></div>
+</div>
+<style type="text/css">
+.contentLogin{
+    border-bottom: 0 !important;
+    width: 500px;
+    height: 150px;
+    margin-left: 30%;
+    background-color: white;
+    padding: 1em !important;
+    z-index: 1;
+    position: relative;
+    box-shadow: 0 0 2px 0px;
+    border-radius: 3px;
+    position: absolute;
+}
+.rowLogin{
+  padding: 0.5em;
+}
+.rowLogin input{
+  width: 100%;
+  padding: 0.5em;
+  border: none;
+  border-bottom: solid 1px;
+}
+.rowLogin input:focus {
+  border-color: red;
+  border-radius: 0;
+}
+.formUser{
+     height: 250px;
+}
+.d-error-validate{
+     border: solid 1px red;
+}
+</style>
+<script type="text/javascript">
+      dvn('input[name=usr_form]').keyup(function(k){
+          dvn('input[name=usr_form]')[0].value = (dvn('input[name=usr_form]')[0].value).toUpperCase();
+      });
+
+      dvn('input[name=user]').keyup(function(k){
+          dvn('input[name=user]')[0].value = (dvn('input[name=user]')[0].value).toUpperCase();
+      });
+     dvn('#btnAceptarLogin').divButton({
+          click:function(){
+               encripta(dvn('input[name=pass]')[0].value);
+          }
+     });
+     dvn('#lnkcreateLogin').divButton({
+          type: 'link',
+          click: function(){
+               dvn('#usrForm').removeClass('d-hidden');
+               dvn('#lgnForm').addClass('d-hidden');
+               dvn('.contentLogin').addClass('formUser');
+          }
+     });
+     dvn('#btnIniciarSession').divButton({
+          type: 'link',
+          text: 'Iniciar Session',
+          click: function(){
+               dvn('#lgnForm').removeClass('d-hidden');
+               dvn('#usrForm').addClass('d-hidden');
+               dvn('.contentLogin').removeClass('formUser');
+          }
+     });
+     dvn('#btnAceptCreateUser').divButton({
+          text: 'Aceptar',
+          click: function(){
+               var usr_form          = dvn('input[name=usr_form]')[0].value;
+               var name_form         = dvn('input[name=name_form]')[0].value;
+               var email_form        = dvn('input[name=email_form]')[0].value;
+               var pass_form         = dvn('input[name=pass_form]')[0].value;
+               var confirmPass_form  = dvn('input[name=confirmPass_form]')[0].value;
+               if( (usr_form.split())[0].length == 0 ){
+                    dvn('input[name=usr_form]').addClass('d-error-validate');
+                    return;
+               }
+               if( (name_form.split())[0].length == 0){
+                    dvn('input[name=name_form]').addClass('d-error-validate');
+                    return;
+               }
+               if((email_form.split())[0].length == 0){
+                    dvn('input[name=email_form]').addClass('d-error-validate');
+                    return;
+               }
+               if((pass_form.split())[0].length == 0){
+                    dvn('input[name=pass_form]').addClass('d-error-validate');
+                    return;
+               }
+               if((confirmPass_form.split())[0].length == 0){
+                    dvn('input[name=confirmPass_form]').addClass('d-error-validate');
+                    return;
+               }
+               createUser(pass_form);
+          }
+     });
+    dvn('div[d-role=cancelLogin]').divButton({
+      type: 'link',
+      text: 'cancel',
+      click:function(){
+        if(dvn('#loadLogin').length>0){
+          dvn('#loadLogin').remove();
+        }
+      }
+    });
+</script>

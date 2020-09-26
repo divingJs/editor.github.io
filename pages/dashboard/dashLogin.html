@@ -1,0 +1,224 @@
+<div class="d-article d-dashboard" id="contentDashboard">
+  <div class="d-article-header content-dsh">
+    <em class="icon-googleplus" id="engrane2"></em>
+    &nbsp;Diving Editor
+  </div>
+  <div class="d-article-section content-button">
+    <div id="logout" ></div>
+    <div id="btnCode" ></div>
+    <div id="btnDownload" ></div>
+    <br>
+    <div class="d-article-header"></div>
+  </div>
+  <!--div class="d-article-header">configuration</div-->
+  <div class="d-article-section content-theme">
+    <div id="identificador"></div>
+    <div id="indent"></div>
+  </div>
+  <div class="d-clear"></div>
+  <div class="d-article-section content-js">
+  <div><em>Ejecutar Js </em>[Ctrl+Enter]</div>
+  </div>
+
+     <!-- ELEMENTOS DE LA CONFIGURACION DE UN USUARIO LOGUEADO -->
+
+     <div class="d-article-header"></div>
+     <div class="d-article-header">
+          Configuracion de Sala
+     </div>
+     <div class="d-article-section">
+          <div id="createSala"></div>
+          <div id="modificar" class="d-hidden"></div>
+     </div>
+     <br>
+     <div class="d-article-header">
+          Herramientas
+     </div>
+     <div class="d-article-section">
+          <div id="diagrama"></div>
+          <div id="compartCode"></div>
+          <!--div id="btnSave"></div-->
+     </div>
+
+     <!--div class="d-article-section">
+          <em id="pPropias" class="vPlantilla selected">propias</em> / 
+          <em id="pPublicas" class="vPlantilla">publicas</em> / 
+          <em id="pPrivadas" class="vPlantilla">privadas</em>
+          <hr style="border: solid 1px #3a3a3a22;">
+          <ul class="list-plantilla" id="listaPlantilla"></ul>
+     </div-->
+</div>
+<!-- ventana de configuracion de sala -->
+<div id="roomConfigure" class="d-hidden d-article createRoom">
+     <div class="d-article-header">Configuracion de sala</div>
+     <div class="d-article-section">
+          <div id="nameRoom"></div>
+          <div id="listeners"></div>
+          <em class="icon-search d-searListener" id='searchListener'></em>
+          <div class="listenerOut" id="listenerOut"></div>
+     </div>
+     <div class="d-article-footer">
+          <div id="btnCancelRoom"></div>
+          <div id="btnAceptRoom"></div>
+          <br>
+     </div>
+</div>
+<style type="text/css">
+
+.d-dashboard{width: 300px;background-color: #fff;position:absolute;left: 0;top: 0;margin: 0;}
+div[class^=content]{border-bottom: solid 1px #b4b4b4;padding: 1em;display: block;}
+/*#identificador{width: 75%;float: left;}
+#indent{width: 20%;float: right;}*/
+div[d-rol=d-itemSelects]{position: absolute !important;}
+.vPlantilla{cursor: pointer;padding: 0em 0.5em 0em;}
+.vPlantilla.selected{color: blue;border-bottom: solid 1px blue;background-color: #f4f4f4;}
+.d-searListener {position: absolute;right: 1em;width: 1.25em;text-align: center;height: 1.25em;bottom: 2.75em;border: solid 1px #a4a4a4;padding: 0.25em;cursor: pointer;border-radius: 5px;}
+.createRoom{width: 400px;margin: 0px auto;}
+
+</style>
+
+<script type="text/javascript">
+     dvn('#contentDashboard') .attr('style','height: '+(window.innerHeight-18)+'px;overflow:hidden;overflow-y:scroll;');
+     dvn('#btnCode')          .divButton({text:'Code',type: 'default',click: function(){createCode();}});
+     //dvn('#btnSave')          .divButton({text:'Save',type: 'link', class:'vPlantilla',click: function(){console.log( 'Save', this );}});
+     dvn('#btnDownload')      .divButton({text:'Download',type: 'default',click: function(){saveFile();}});
+     dvn('#engrane2')         .dblclick(function(){dvn('#engrane').removeClass('d-hidden');removeDashboard();});
+     dvn('#logout')           .divButton({text: 'logout',click:function(){logout();}});
+
+     dvn('#createSala').divButton({text: 'Crear sala',type: 'link',click:function(){dvn('#roomConfigure').removeClass('d-hidden');}});
+     dvn('#btnAceptRoom').divButton({text:'Aceptar',type: 'success',click:function(){console.log( 'Estas creando una sala' );}});
+     dvn('#nameRoom').divText({placeholder: 'Nombre de la sala'});
+     dvn('#listeners').divText({
+          placeholder: 'user@dominio.com',
+          keyup:function(e){
+               if(e.key == 'Enter'){
+                    var lst = dvn('#listeners').data('divText');
+                    console.log( lst.text )
+               }
+          }
+     });
+     dvn('#btnCancelRoom').divButton({text: 'Cancel',type: 'link',click: function(){dvn('#roomConfigure').addClass('d-hidden');}});
+
+     dvn('#identificador').divMultiSelect({
+          datos:'3024-day|3024-night|abcdef|ambiance|ayu-dark|ayu-mirage|base16-dark|bespin|base16-light|blackboard|cobalt|colorforth|dracula|duotone-dark|duotone-light|eclipse|elegant|erlang-dark|gruvbox-dark|hopscotch|icecoder|isotope|lesser-dark|liquibyte|lucario|material|material-darker|material-palenight|material-ocean|mbo|mdn-like|midnight|monokai|moxer|neat|neo|night|nord|oceanic-next|panda-syntax|paraiso-dark|paraiso-light|pastel-on-dark|railscasts|rubyblue|seti|shadowfox|solarized|the-matrix|tomorrow-night-bright|tomorrow-night-eighties|ttcn|twilight|vibrant-ink|xq-dark|xq-light|yeti|idea|darcula|yonce|zenburn'.split('|'),
+          change:function(){
+               var dta = dvn('#identificador').data('divMultiSelect');
+               optionsSet('theme',dta.selected()[0].value);
+          },
+          maxItemSelected:1,
+          placeholder: 'Selecciona un tema'
+     });
+
+     /*dvn('#indent').divText({
+          placeholder: 'ident',
+          type: 'number',
+          value : controlEditor.indent,
+          change:function(){
+               var idnt = dvn('#indent').data('divText');
+               var indent = ( idnt.text == '')?2:idnt.text ;
+               controlEditor.indent = indent;
+               optionsSet( 'indentUnit', indent );
+          }
+     });*/
+     
+     function optionsSet(option, value){
+         if(dvn('#tabEditor').length>0){
+           var obj = dvn('#tabEditor')[0].querySelectorAll('.CodeMirror');
+           for(var i = 0; i < obj.length; i ++ ){
+               var cm = obj[i].CodeMirror;
+               cm.setOption(option, value );
+           }
+         }
+     }
+
+
+dvn('#compartCode').divButton({
+  text: 'Compartir Codigo',
+  type: 'link',
+  click: function(){
+    
+    if(dvn('#contentCompareCode').length > 0 ){
+          var wd = dvn('#contentCompareCode').data('divWindow');
+          wd.open();
+          return;
+    }
+     dvn('#vtnCompartCode').append(dvn('<div>',{id:'vWCompart'}));
+     
+     dvn('#vWCompart').divWindow({
+          title: 'codigo Compartido',
+          content: dvn('<div>',{
+                    id: "contentForm",
+               text:'Plaing programing'
+          }).append(
+                    dvn('<div>',{
+                    id: 'inpUser'
+                })
+            ).append(
+                    dvn('<div>',{
+                    id: 'btnAceptCompart'
+                })
+          ),
+          width: 400,
+          height: 175,
+          actions: ['close']
+    });
+     dvn('#inpUser').divText({
+          placeHolder: 'usuario@dominio.com'
+    });
+     dvn('#btnAceptCompart').divButton({
+     type: 'success',
+          text: 'Aceptar',
+          click:function(){
+              var user = dvn('#inpUser').data('divText').text;
+              compartCode({
+                invite:'saludo',
+                params:{
+                  from:controlEditor.datosUser[0].nombre_str,
+                  email:controlEditor.datosUser[0].email_str,
+                  to:user,
+                  code:editorText
+                }
+              });
+        }
+    });
+     var wd = dvn('#vWCompart').data('divWindow');
+     wd.center();
+  }
+});
+dvn('#diagrama').divButton({
+  text:'Diagrama',
+  type: 'link', 
+  class:'vPlantilla',
+  click: function(){
+
+    if(dvn('#ventanaDiagrama').length > 0 ){
+      dvn('#ventanaDiagrama').data('divWindow').open();
+      return;
+    }
+    dvn('#vtnDiagram').append(dvn('<div>',{id:'ventanaDiagrama'}));
+    dvn('#vtnDiagram').append(
+
+      dvn('<iframe>',{
+        id:'frameDiagrama',
+        src: "../libs/mxgraph/examples/grapheditor/www/index.html",
+        style: 'width: 100%;height:100%;'
+      })
+    );
+    //"/libs/mxgraph/examples/grapheditor/www/index.html"
+    dvn('#ventanaDiagrama').divWindow({
+      width: 500,
+      height: 500,
+      title: 'Diagrama-Editor',
+      content: dvn('#frameDiagrama'),
+      actions: ['close','minimize'],
+      resize: function(x,y){
+        var frames = dvn('#frameDiagrama')[0].parentNode;
+        frames.style.height= (y-97)+"px";
+        frames.style.width = (x-20)+"px";
+      }
+    });
+    dvn('#ventanaDiagrama').data('divWindow').center();
+    //dvn(dvn('#contentEditor')[0].querySelector('.d-window-content')).center();
+  }
+});
+</script>
