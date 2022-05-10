@@ -11,11 +11,35 @@ async function saludolocal(opcion){
 }
 
 async function validateJs(code){
+	/*try{
+		const script = new vm.Script(code);
+		const contexts = [{}];
+		contexts.forEach((context) => {
+		  script.runInNewContext(context);
+		});
+		return {message:null, error:0, code:'success'};
+	}catch(e){
+		var fll = e.stack.split('evalmachine.<anonymous>:')[1].split('\n');
+		var fallas = [];
+		for(var i = 0; i < fll.length; i ++ ){
+			fallas.push({linea:i, msg:fll[i]});
+		}
+		return { message: JSON.stringify(fallas),
+			error: 1,
+			code: 'field'
+		};
+	}
+	*/
 	try{
 		await new vm.Script(code);
 		return {message:null, error:0, code:'success'};
 	}catch(e){
-		return { message:'Error at line :'+(e.stack.split('evalmachine.<anonymous>:')[1].substring(0, 1)),
+		var fll = e.stack.split('evalmachine.<anonymous>:')[1].split('\n');
+		var fallas = [];
+		for(var i = 0; i < fll.length; i ++ ){
+			fallas.push({linea:i, msg:fll[i]});
+		}
+		return { message: JSON.stringify(fallas),
 			error: 1,
 			code: 'field'
 		};

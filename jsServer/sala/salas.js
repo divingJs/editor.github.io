@@ -20,7 +20,7 @@ async function createSala(io,param,socket){
 }
 async function searchListeners(io,param,socket,option){
 	var rtn = await config.consulta({q:'roomInfos',dato:['-1',param.email,'-1',option,param.sessionID]});
-	return (JSON.parse(rtn)[0]);
+	return (rtn!=null)?(JSON.parse(rtn)[0]):null;
 }
 exports.createSala = createSala;
 exports.searchListeners = searchListeners;
