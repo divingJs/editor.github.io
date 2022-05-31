@@ -154,6 +154,9 @@
             toggle:function(){
                 diving(this)[diving(this).is(':hidden')?'show':'hide'].apply(diving(this),arguments);
             },
+            hasClass:function(c){
+			    return diving.className.has(((this.hasOwnProperty('classList'))?this:this[0]),c);
+            },
             addClass:function(c){
                 diving.className.add((this.hasOwnProperty('classList'))?this:this[0],c);
             },
