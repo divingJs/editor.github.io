@@ -156,8 +156,41 @@ ul#resultado {
 
 
 
+.d-window-content{
+    position:relative;
+    border: solid 1px black;
+    background-color: white;
+}
+.d-window-ajuste{
+    position: relative;
+}
 
+.d-window-title {
+    background-color: #404040;
+    color: lightgray;
+    padding: 0.5em;
+}
+.d-window-body{
+    padding: 0.5em;
+    overflow: hidden;
+    height: calc( 100% - 3.5em);
+}
+.d-window-modal{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: #404040b3;
+}
+.d-window-actions {
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+}
+.d-window-actions em:hover{
+    cursor: pointer;
+}
 
+/*
 .d-window-content {
     width: 500px;
     position: absolute;
@@ -191,7 +224,7 @@ div[d-role=resizeWindow]{
     height: 1em;
     background-color: transparent;
 }
-
+*/
 
 
 
