@@ -193,6 +193,9 @@
             }
             return this;
         },
+        parent:function(){
+            return dvn(this[0].parentNode);
+        },
         center:function(){
             var stl = diving(this).attr('style');
             var cnt = diving(this);
@@ -2803,7 +2806,312 @@ diving.each(("blur|focus|focusin|focusout|resize|scroll|click|dblclick|mousedown
         diving.widget(widget);
     })();
     /*window*/
+
     (function(){
+     var widget = {
+        name: "Window",
+        init: function(prm) {
+            prm=diving.extend(prm,{
+                class:"d-window-content"+(prm.hasOwnProperty('class')?' '+prm.class:''),
+                estilo:'width:'+(diving.addPx(prm.width)||diving.addPx(100))+
+                       ";height:"+(diving.addPx(prm.height)||diving.addPx(50))+";",
+                ajustaMargen:widget.ajustaMargen,
+                dRoles:['t','l','b','r','tl','bl','br','tr'],
+                wDraggable:widget.wdraggable,
+                resizable:prm.resizable||true
+            });
+            var widtgetData = {
+                elem:diving(this)[0],
+                class:prm.class,
+                actions:prm.actions,
+                modal:prm.modal||false,
+                close:widget.close,
+                open:widget.open,
+                destroy:widget.destroy,
+                center:widget.center,
+                resize:function(x,y){
+                    prm.resize.prototype= this.resize;
+                    this.x = x;
+                    this.y = y;
+                    prm.resize(x,y);
+                }
+            };
+            widget.createElement(prm,widtgetData);
+            diving(this).data('div'+widget.name, widtgetData);
+        },
+        createElement: function(p,data) {
+            diving(data.elem).empty();
+            diving(data.elem).attr('style','width:0;height:0;');
+            var expando = diving.expando;
+            if(p.hasOwnProperty('modal')){
+                if(p.modal){
+                    diving(data.elem).append(
+                        diving('<div>',{class:'d-window-modal'})
+                    );
+                }
+            }
+            var ventana=diving('<div>',{
+                style: p.estilo,
+                class:p.class,
+                'd-role':'divWindow',
+                ui:expando
+            });
+            diving(data.elem).append(ventana);
+            var title=diving('<div>',{
+                class:'d-window-title',
+                text:p.hasOwnProperty('title')?p.title:'&nbsp;'
+            });
+            ventana.append(title);
+            p['title']=title;
+            p.wDraggable(title[0],ventana[0]);
+
+            var acts=[
+                    {elem:diving('<em>',{
+                        class:'icon-minus3',
+                        click:function(){
+                            if(widget.maximize)
+                                return;
+                            var wbd=diving(diving(this).parent().parent().parent()).find('.d-window-body');
+                            var ttl=(diving(this).parent().parent())[0].getBoundingClientRect();
+                            wbd.toggleClass('d-hidden');
+                            if(wbd.hasClass('d-hidden')){
+                                diving(diving(this).parent().parent().parent())[0].style.height=ttl.height+"px";
+                            }else{
+                                diving(diving(this).parent().parent().parent())[0].style.height=widget.rect.height+'px';
+                            }
+                        }
+                    }),
+                    visible:false,
+                    name:'minimize'},
+                    {elem:diving('<em>',{
+                        class:'icon-add',
+                        click:function(){
+                            var wbd=diving(diving(this).parent().parent().parent()).find('.d-window-body');
+                            if(wbd.hasClass('d-hidden'))
+                                wbd.toggleClass('d-hidden');
+                            if(!widget.maximize){
+                                diving(diving(this).parent().parent().parent())[0].style.width  ='calc(100% - 2px)';
+                                diving(diving(this).parent().parent().parent())[0].style.height ='calc(100% - 2px)';
+                                diving(diving(this).parent().parent().parent())[0].style.top    ="0px";
+                                diving(diving(this).parent().parent().parent())[0].style.left   ="0px";
+                                widget.maximize=true;
+                            }else{
+                                diving(diving(this).parent().parent().parent())[0].style.width  =widget.rect.width+"px";
+                                diving(diving(this).parent().parent().parent())[0].style.height =widget.rect.height+"px";
+                                diving(diving(this).parent().parent().parent())[0].style.top    =widget.rect.top+"px";
+                                diving(diving(this).parent().parent().parent())[0].style.left   =widget.rect.left+"px";
+                                widget.maximize=false;
+                            }
+                        }
+                    }),
+                    visible:false,
+                    name:'maximize'},
+                    {elem:diving('<em>',{
+                        class:'icon-error',
+                        click:function(){
+                            var dw = (diving(diving(this).parent().parent().parent().parent())).data('divWindow');
+                            dw.close();
+                        }
+                    }),
+                    visible:false,
+                    name:'close'}
+                    ];
+
+            var actions = diving('<div>',{class:'d-window-actions'});
+            for(var a=0;a<acts.length;a++){
+                for(var i=0;i<p.actions.length;i++){
+                    if(acts[a].name==p.actions[i]){
+                        acts[a].visible=true;
+                    }
+                }
+                if(acts[a].visible){
+                    actions.append(acts[a].elem);
+                }
+            }
+            title.append(actions);  
+            if(p.hasOwnProperty('resizable')){
+                if(p.resizable){
+                    setTimeout(function(){
+                        diving.each(p.dRoles,function(i,v){
+                            diving(data.elem).append(
+                                diving('<div>',{
+                                    class:'d-window-ajuste',
+                                    'd-role':"w_"+v,
+                                    'd-roleTo':v
+                                })
+                            );
+                        });
+                        p.ajustaMargen(p,data,ventana);
+                    },100);
+                }
+            }
+            var wBody=diving('<div>',{
+                'd-role':'d-window-body',
+                class:'d-window-body'
+            });
+            wBody.append(p.content);
+            ventana.append(wBody);
+            wBody[0].style.overflowY=(p.hasOwnProperty('scrollable')?'scroll':'');
+            widget.rect=ventana[0].getBoundingClientRect();
+        },
+        center:function(){
+            diving(this.elem.querySelector('.d-window-content')).center();
+        },
+        destroy:function(){
+            diving(this.elem).removeData('div'+widget.name);
+            diving(this.elem)[0].remove();
+        },
+        close:function(){
+            diving(this.elem).addClass('d-hidden');
+        },
+        open:function(){
+            diving(this.elem).removeClass('d-hidden');
+        },
+        ajustaMargen:function(p,data,elem){
+            var ui=diving(elem).attr('ui');
+            var vth=elem[0].getBoundingClientRect();
+            diving.each(p.dRoles,function(i,v){
+                var element=diving(data.elem).find('div[d-roleTo='+v+']')[0];
+                var stl = 'z-index:1000;background-color:transparent;position:absolute;cursor:';
+                switch(v){
+                    case 't': stl+="n-resize; top:"+vth.y+"px;left:"+vth.left+"px;width:"+vth.width+"px;height:6px;";break;
+                    case 'tr':stl+="ne-resize;top:"+vth.y+"px;left:"+(vth.x+vth.width)+"px;width:6px;height:6px;";break;
+                    case 'r': stl+="ew-resize;top:"+vth.y+"px;left:"+(vth.x+vth.width)+"px;width:6px;height:"+vth.height+"px;";break;
+                    case 'tl':stl+="nw-resize;top:"+vth.y+"px;left:"+vth.x+"px;width:6px;height:6px;";break;
+                    case 'l': stl+="e-resize; top:"+vth.y+"px;left:"+vth.x+"px;width:6px;height:"+vth.height+"px;";break;
+                    case 'b': stl+="n-resize; top:"+(vth.y+vth.height)+"px;left:"+vth.left+"px;width:"+vth.width+"px;height:6px;";break;
+                    case 'br':stl+="nw-resize;top:"+(vth.y+vth.height)+"px;left:"+(vth.x+vth.width)+"px;width:6px;height:6px;";break;
+                    case 'bl':stl+="ne-resize;top:"+(vth.y+vth.height)+"px;left:"+vth.x+"px;width:6px;height:6px;";break;
+                }
+                diving(element).attr('style',stl);
+                widget.dragElement(element,elem);
+            });
+        },
+        wdraggable:function(title, content) {
+            var px = 0, py = 0;
+            var dragObj = null;
+            var obj = content || title;
+            obj.style.position = "absolute";
+            title.addEventListener('mousedown', function () {
+                obj.addEventListener('mousedown', onMouseDown);
+                function onMouseDown(a) {
+                    if(widget.maximize){
+                        return;
+                    }
+                    px = a.layerX;
+                    py = a.layerY;
+                    dragObj = obj;
+                }
+                obj.addEventListener('mouseup', function (e) {
+                    obj.removeEventListener('mousedown', onMouseDown, false);
+                    dragObj = null;
+                });
+                obj.addEventListener('mousemove', function (e) {
+                    var x = e.pageX - px;
+                    var y = e.pageY - py;
+                    if (dragObj == null)
+                        return;
+                    dragObj.style.left = x + "px";
+                    dragObj.style.top = y + "px";
+                    var dt =diving(content).parent().find('div[d-roleTo=t]')[0],
+                        dl =diving(content).parent().find('div[d-roleTo=l]')[0],
+                        dr =diving(content).parent().find('div[d-roleTo=r]')[0],
+                        db =diving(content).parent().find('div[d-roleTo=b]')[0],
+                        dtr=diving(content).parent().find('div[d-roleTo=tr]')[0],
+                        dtl=diving(content).parent().find('div[d-roleTo=tl]')[0],
+                        dbr=diving(content).parent().find('div[d-roleTo=br]')[0],
+                        dbl=diving(content).parent().find('div[d-roleTo=bl]')[0];
+                        dt.style.left=dl.style.left=dtl.style.left=dbl.style.left=db.style.left=x+'px';
+                        dt.style.top=dl.style.top=dtl.style.top=dtr.style.top=dr.style.top=y+"px";
+                        var vth = dragObj.getBoundingClientRect();
+                        dtr.style.left=dr.style.left=dbr.style.left=(x+vth.width)+'px';
+                        dbl.style.top=db.style.top=dbr.style.top=(y+vth.height)+'px';
+                    widget.rect=vth;
+                });
+            });
+        },
+        dragElement: function(elmnt,ventana) {
+            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            elmnt.onmousedown = dragMouseDown;
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+            }
+            function elementDrag(e){
+                e = e || window.event;
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                var vbc=ventana[0].getBoundingClientRect();
+                var dt =diving(elmnt).parent().find('div[d-roleTo=t]')[0],
+                dl =diving(elmnt).parent().find('div[d-roleTo=l]')[0],
+                dr =diving(elmnt).parent().find('div[d-roleTo=r]')[0],
+                db =diving(elmnt).parent().find('div[d-roleTo=b]')[0],
+                dtr=diving(elmnt).parent().find('div[d-roleTo=tr]')[0],
+                dtl=diving(elmnt).parent().find('div[d-roleTo=tl]')[0],
+                dbr=diving(elmnt).parent().find('div[d-roleTo=br]')[0],
+                dbl=diving(elmnt).parent().find('div[d-roleTo=bl]')[0];
+                switch(diving(elmnt).attr('d-roleTo')){
+                    case 't':
+                        ventana[0].style.top=dr.style.top=dl.style.top=dtr.style.top=dtl.style.top=elmnt.style.top=(elmnt.offsetTop-pos2)+"px";
+                        ventana[0].style.height=dl.style.height=dr.style.height=db.offsetTop-(elmnt.offsetTop-pos2)+'px';
+                    break;
+                    case 'l':
+                        db.style.left=dtl.style.left=dbl.style.left=dt.style.left=ventana[0].style.left=elmnt.style.left=(elmnt.offsetLeft-pos1)+'px';
+                        ventana[0].style.width=dt.style.width=db.style.width=dr.offsetLeft-(elmnt.offsetLeft-pos1)+"px";
+                    break;
+                    case 'b':
+                        dbr.style.top=dbl.style.top=elmnt.style.top=(elmnt.offsetTop-pos2)+"px";
+                        dl.style.height=dr.style.height=ventana[0].style.height=((elmnt.offsetTop-pos2)-vbc.top)+'px';
+                    break;
+                    case 'r':
+                        dtr.style.left=dbr.style.left=elmnt.style.left=(elmnt.offsetLeft-pos1)+"px";
+                        dt.style.width=db.style.width=ventana[0].style.width = ((elmnt.offsetLeft-pos1)-vbc.left)+'px';
+                    break;
+                    case 'tr':
+                        dr.style.left=dbr.style.left=elmnt.style.left=(elmnt.offsetLeft-pos1)+"px";
+                        ventana[0].style.top=dl.style.top=dr.style.top=dt.style.top=dtl.style.top=elmnt.style.top=(elmnt.offsetTop-pos2)+"px";
+                        dt.style.width=db.style.width=ventana[0].style.width=((elmnt.offsetLeft-pos1)-vbc.left)+'px';
+                        dl.style.height=dr.style.height=ventana[0].style.height=(db.offsetTop-(elmnt.offsetTop-pos2))+'px';
+                    break;
+                    case 'tl':
+                        ventana[0].style.top=dl.style.top=dr.style.top=dt.style.top=dtr.style.top=elmnt.style.top=(elmnt.offsetTop-pos2)+"px";
+                        ventana[0].style.left=dt.style.left=db.style.left=dl.style.left=dbl.style.left=elmnt.style.left=(elmnt.offsetLeft-pos1)+'px';
+                        dl.style.height=dr.style.height=ventana[0].style.height=(db.offsetTop-(elmnt.offsetTop-pos2))+'px';
+                        dt.style.width=db.style.width=ventana[0].style.width=dr.offsetLeft-(elmnt.offsetLeft-pos1)+"px";
+                    break;
+                    case 'br':
+                        db.style.top=dbl.style.top=elmnt.style.top=(elmnt.offsetTop-pos2)+"px";
+                        dr.style.left=dtr.style.left=elmnt.style.left=(elmnt.offsetLeft-pos1)+"px";
+                        dl.style.height=dr.style.height=ventana[0].style.height=((elmnt.offsetTop-pos2)-vbc.top)+'px';
+                        db.style.width=dt.style.width=ventana[0].style.width=((elmnt.offsetLeft-pos1)-vbc.left)+'px';
+                    break;
+                    case 'bl':
+                        db.style.top=dbr.style.top=elmnt.style.top=(elmnt.offsetTop-pos2)+"px";
+                        dt.style.left=db.style.left=dl.style.left=dtl.style.left=ventana[0].style.left=elmnt.style.left=(elmnt.offsetLeft-pos1)+'px';
+                        dl.style.height=dr.style.height=ventana[0].style.height=((elmnt.offsetTop-pos2)-vbc.top)+'px';
+                        dt.style.width=db.style.width=ventana[0].style.width=(dr.offsetLeft-(elmnt.offsetLeft-pos1))+"px";
+                    break;
+                }
+                widget.rect=vbc;
+            }
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        },
+        rect:null,
+        maximize:false
+    };
+    diving.widget(widget);
+})();
+    /*(function(){
          var widget = {
             name: "Window",
             init: function(prm) {
@@ -2988,7 +3296,7 @@ diving.each(("blur|focus|focusin|focusout|resize|scroll|click|dblclick|mousedown
             }
         };
         diving.widget(widget);
-    })();
+    })();*/
     /*listView*/
     (function(){
          var widget = {
