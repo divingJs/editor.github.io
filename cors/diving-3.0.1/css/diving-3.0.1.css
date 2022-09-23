@@ -17,7 +17,7 @@
 .d-article {border: solid 1px #0d0d0d33;padding: 0.5em;border-radius: 3px;margin: 3px;box-shadow: 1px 1px 2px #b3b1b1;display: flow-root;}
 .d-article .d-article-header  {font-size: larger;border-bottom: solid 1px #3a3a3a22;padding: 0.5em;}
 .d-article .d-article-aside   {border-right: solid 1px #0d0d0d33; padding: 0.5em; font-size: small;}
-.d-article .d-article-section {font-size: medium;text-align: justify;padding: 0.5em;line-height: normal; display:flex;width:fit-content;}
+.d-article .d-article-section {font-size: medium;text-align: justify;padding: 0.5em;line-height: normal;}/* display:flex;width:fit-content;}*/
 .d-article .d-article-footer {border-top:solid 1px #0d0d0d33;padding: 0.5em;font-size:small;}
 .d-article>.d-article-section>.d-article-aside{margin-right:0.5em;display: flex;}
 /**button **/

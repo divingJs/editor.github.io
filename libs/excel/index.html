@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>editor</title>
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="js/xlsx/xlsx.full.min.js"></script>
+		<link rel="stylesheet" href="css/excelFile.css">
+	</head>
+	<body>
+		<style type="text/css">
+			.container{
+				width:  100%;
+			}
+			.row{
+				display: flex;
+			}
+			.col-4{
+				width:  30%;
+				display: flex;
+			}
+			.col-12{
+				width: 90%;
+			}
+		</style>
+		<div class="container">
+			<div class="row">
+				<div class="col-4">
+					<div id="fl"></div>
+				</div>
+				<div class="col-4">
+					<div class="row">
+						<div class="col-12">
+							<div id="f2"></div>
+						</div>
+						<div class="col-12">
+							<div id="btnInfoUpload">Mostrar</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-4">
+					<div id="f3"></div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" d-role="d-editor-script" src="js/readFileXLSX.js"></script>
+		<script type="text/javascript">
+
+		$('#fl').ExcelFile({
+			columns:[
+			'CTNS',
+			'ID_ART',
+			'OC_NUM_N',
+			'T25__0',
+			'T26__0',
+			'T27__0',
+			'T28__0',
+			'T29__0',
+			'T30__0',
+			'TA_CVE_N_INI',
+			'TOTAL'],
+			name: 'archivo_prueba.xlsx',
+			text: 'EXPORT',
+			data:[{
+					CTNS: "",
+					ID_ART: "823513",
+					OC_NUM_N: "288094",
+					T25__0: "264",
+					T26__0: "564",
+					T27__0: "684",
+					T28__0: "468",
+					T29__0: "168",
+					T30__0: "84",
+					TA_CVE_N_INI: "24",
+					TOTAL: "13392"
+				}]
+			 /*[
+				{id_art:10126,marca:'flexi',modelo:'A14',color:'azul',corrida:'b15'},
+				{id_art:10127,marca:'flexi',modelo:'A19',color:'azul',corrida:'b16'},
+				{id_art:10128,marca:'flexi',modelo:'A16',color:'azul',corrida:'b17'},
+				{id_art:10129,marca:'flexi',modelo:'A17',color:'azul',corrida:'b18'},
+				{id_art:10130,marca:'flexi',modelo:'A15',color:'azul',corrida:'b19'},
+				{id_art:10131,marca:'flexi',modelo:'A13',color:'azul',corrida:'b14'}]*/,
+			action: 'export'
+		});
+
+
+
+
+		$('#f2').ExcelFile({
+			text: 'UPLOAD',
+			action: 'upload',
+			sheet: 2
+		});
+		
+		$('#btnInfoUpload').click(function(){
+			var f = $('#f2').data('file');
+			console.log( f.data );
+		});
+		
+
+
+
+
+		$('#f3').ExcelFile({
+			columns:['id_art','marca','modelo','color','corrida'],
+			name: 'download_file.xlsx',
+			text: 'DOWNLOAD',
+			action: 'download'
+		});
+		</script>
+	</body>
+</html>

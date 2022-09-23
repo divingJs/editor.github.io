@@ -1,21 +1,22 @@
-var editorText = {};
+var editorText = {files:[]};
 var controlEditor = {
 	theme: 'default',
-	indent: '5'
+	indent: '2'
 };
 function preguntarAntesDeSalir(){
-return "¿Seguro que quieres salir?";
+	return "¿Seguro que quieres salir?";
 }
-window.onbeforeunload = preguntarAntesDeSalir;
-
-/*
+/**
+ * inicio axdb1
+ * preparacion de entrada al editor
+ */
 dvn('body').append(
 	dvn('<div>',{
 		class:'d-content-engrane'
 	}).append(
 		dvn('<div>',{
 			id:'engrane',
-			class:'icon-googleplus d-engrane',
+			class:'icon-cog d-engrane',
 			dblclick:function(){
 				dvn('#engrane').addClass('d-hidden');
 				dashboard('rtn_dashboard','dashboard');
@@ -23,17 +24,12 @@ dvn('body').append(
 		})
 	)
 );
-
 dvn('#engrane')[0].ontouchend=function(e){
 	dvn('#engrane').addClass('d-hidden');
 	dashboard('rtn_dashboard','dashboard');
 };
 dvn.draggable(dvn('#engrane')[0],dvn(dvn('#engrane')[0].parentNode)[0]);
 dvn(dvn('#engrane')[0].parentNode).center();
-*/
-(function(){
-	setTimeout(function(){dashboard('rtn_dashboard','dashboard');},100);
-})();
 dvn('#area').append(
 	dvn('<iframe>',{
 		id:'salida',
@@ -44,25 +40,18 @@ dvn('#area').append(
 window.onresize=function(){
 	dvn('#salida').attr('style','height: '+window.innerHeight+'px');
 	dvn('#contentDashboard').attr('style','height: '+(window.innerHeight-18)+'px');
-  	dvn('#accionesDashBoard').attr('style','height:'+(window.innerHeight-21)+'px');
-	//dvn(dvn('#engrane')[0].parentNode).center();
+  	dvn('#accionesDashBoard').attr('style','height:'+window.innerHeight+'px');
+//	dvn(dvn('#engrane')[0].parentNode).center();
 }
+/*fin axdb1 */
 function createCode(){
 	if(dvn('#contentEditor').length>0){
 		dvn('#contentEditor').removeClass('d-hidden');
 	}else{
 		dvn('body').prepend(
-			dvn('<div>',{
-				id:'contentEditor'
-			}).append(
-				dvn('<div>',{
-					id:'contentTextArea'
-				})
-			).append(
-				dvn('<div>',{
-					id:'tabEditor'
-				})
-			)
+			dvn('<div>',{id:'contentEditor'})
+				.append(dvn('<div>',{id:'contentTextArea'}))
+				.append(dvn('<div>',{id:'tabEditor'}))
 		);
 		var cnt = [];
 		diving.each("txtHeader txtHtml txtCss txtJs".split(' '),function(i,v){
@@ -104,17 +93,9 @@ function createCode(){
 		});
 		var w = dvn('#contentEditor').data('divWindow');
 		dvn(dvn('#contentEditor')[0].querySelector('.d-window-content')).center();
-
 		dvn('#contentEditor').attr('style','position: absolute;width:0px;height:0px;');
 	}
 }
-
-
-
-
-
-
-
 function createArea(content,ident){
 	content.append(dvn('<div>',{id:ident}));
 	dvn('#'+ident).divText({
@@ -127,28 +108,13 @@ function createArea(content,ident){
 			 /txtJs/.test(ident)?((editorText.hasOwnProperty('js'))?editorText.js:''):''
 	});
 	var area = dvn('#'+ident)[0].querySelector('textArea');
-
-	CodeMirror.commands.save = function() {
-        var elt = editor.getWrapperElement();
-        elt.style.background = "#00f";
-        setTimeout(function() { elt.style.background = ""; }, 300);
-      };
-
 	var editor = CodeMirror.fromTextArea(area, {
+		lineNumbers: true,
 		mode: 	(/HTML/.test(ident.toUpperCase()))?'htmlmixed':
 				(/CSS/.test(ident.toUpperCase()))?'text/css':
 				(/JS/.test(ident.toUpperCase()))?'text/javascript':
 				'htmlmixed',
 		theme: 'default',
-		//matchBrackets: true,
-        //keyMap: "emacs",
-
-	    lineNumbers: true,
-	    //lineWrapping: true,
-	    foldGutter: true,
-	    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-		indentUnit: 5,
-		//scrollbarStyle: "overlay",
 		extraKeys: {
 			"Ctrl-Enter":function(e){
 				createHTML(editorText,true);
@@ -161,14 +127,19 @@ function createArea(content,ident){
 					updateFile({name:window.location.search.replace('?q=',''),data:JSON.stringify(editorText)});
 				}
 			}
-	    }
+	    },
+	    foldGutter: true,
+	    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+	    matchTags: {bothTags: true},
+	    indentUnit:5
 	});
-	setTimeout(function(){
-		var cntCdMirror=dvn('#tabEditor')[0].querySelectorAll('div[d-role=contenido]')[0];
-		var dWb = dvn(cntCdMirror)[0].querySelectorAll('.CodeMirror-scroll')[0].parentNode.CodeMirror;
-		dWb.focus();
-	},100);
-
+	setTimeout(
+		function(){
+			var cntCdMirror=dvn('#tabEditor')[0].querySelectorAll('div[d-role=contenido]')[0];
+			var dWb = dvn(cntCdMirror)[0].querySelectorAll('.CodeMirror-scroll')[0].parentNode.CodeMirror;
+			dWb.focus();
+		},
+	100);
 	editor.on('change',function(e){
 		var value = editor.getValue();
 		editorText[ident.toLowerCase().replace('txt','')]=value;
@@ -188,10 +159,6 @@ function createArea(content,ident){
 	});
 	emmetCodeMirror(editor);
 }
-
-
-
-
 
 function downloadFile(){
   	var zip = new JSZip();

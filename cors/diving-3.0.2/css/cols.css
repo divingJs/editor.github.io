@@ -1,0 +1,75 @@
+body{ margin: 0; }
+.d-container-12{ width: 100%; margin-left: auto; margin-right: auto; }
+.d-container-12 .d-row{  content: ""; clear: both; display: block; }
+.d-col-1,.d-col-2,.d-col-3,.d-col-4,.d-col-5,.d-col-6,.d-col-7,.d-col-8,.d-col-9,.d-col-10,.d-col-11,.d-col-12{ display: inline; float: left; margin-left: 1%; margin-right: 1%; }
+.d-row .d-col-1{ width: 6.333%; }
+.d-row .d-col-2{ width: 14.666%; }
+.d-row .d-col-3{ width: 22.999%; }
+.d-row .d-col-4{ width: 31.333%; }
+.d-row .d-col-5{ width: 39.666%; }
+.d-row .d-col-6{ width: 47.999%; }
+.d-row .d-col-7{ width: 56.333%; }
+.d-row .d-col-8{ width: 64.666%; }
+.d-row .d-col-9{ width: 72.999%; }
+.d-row .d-col-10{ width: 81.333%; }
+.d-row .d-col-11{ width: 89.666%; }
+.d-row .d-col-12{ width: 97.999%; }
+.d-row .d-left-1{ margin-left: 9.333%; }
+.d-row .d-left-2{ margin-left: 17.666%; }
+.d-row .d-left-3{ margin-left: 25.999%; }
+.d-row .d-left-4{ margin-left: 34.333%; }
+.d-row .d-left-5{ margin-left: 42.666%; }
+.d-row .d-left-6{ margin-left: 50.999%; }
+.d-row .d-left-7{ margin-left: 59.333%; }
+.d-row .d-left-8{ margin-left: 67.666%; }
+.d-row .d-left-9{ margin-left: 75.999%; }
+.d-row .d-left-10{ margin-left: 84.333%; }
+.d-row .d-left-11{ margin-left: 92.666%; }
+.d-col-1.d-sn-left{ margin-left: 0px; width: 7.333%; }
+.d-col-2.d-sn-left{ margin-left: 0px; width: 15.666%; }
+.d-col-3.d-sn-left{ margin-left: 0px; width: 23.999%; }
+.d-col-4.d-sn-left{ margin-left: 0px; width: 32.333%; }
+.d-col-5.d-sn-left{ margin-left: 0px; width: 40.666%; }
+.d-col-6.d-sn-left{ margin-left: 0px; width: 48.999%; }
+.d-col-7.d-sn-left{ margin-left: 0px; width: 57.333%; }
+.d-col-8.d-sn-left{ margin-left: 0px; width: 65.666%; }
+.d-col-9.d-sn-left{ margin-left: 0px; width: 73.999%; }
+.d-col-10.d-sn-left{ margin-left: 0px; width: 82.333%; }
+.d-col-11.d-sn-left{ margin-left: 0px; width: 90.666%; }
+.d-col-12.d-sn-left{ margin-left: 0px; width: 98.999%; }
+.d-col-1.d-sn-right{ margin-right: 0px; width: 7.333%; }
+.d-col-2.d-sn-right{ margin-right: 0px; width: 15.666%; }
+.d-col-3.d-sn-right{ margin-right: 0px; width: 23.999%; }
+.d-col-4.d-sn-right{ margin-right: 0px; width: 32.333%; }
+.d-col-5.d-sn-right{ margin-right: 0px; width: 40.666%; }
+.d-col-6.d-sn-right{ margin-right: 0px; width: 48.999%; }
+.d-col-7.d-sn-right{ margin-right: 0px; width: 57.333%; }
+.d-col-8.d-sn-right{ margin-right: 0px; width: 65.666%; }
+.d-col-9.d-sn-right{ margin-right: 0px; width: 73.999%; }
+.d-col-10.d-sn-right{ margin-right: 0px; width: 82.333%; }
+.d-col-11.d-sn-right{ margin-right: 0px; width: 90.666%; }
+.d-col-12.d-sn-right{ margin-right: 0px; width: 98.999%; }
+.d-col-1.d-sn-right.d-sn-left,  .d-col-1.d-sn-left.d-sn-right{ margin-right: 0px; margin-left: 0px; width: 8.333%; }
+.d-col-2.d-sn-right.d-sn-left,  .d-col-2.d-sn-left.d-sn-right{ margin-right: 0px; margin-left: 0px; width: 16.666%; }
+.d-col-3.d-sn-right.d-sn-left,  .d-col-3.d-sn-left.d-sn-right{ margin-right: 0px; margin-left: 0px; width: 24.999%; }
+.d-col-4.d-sn-right.d-sn-left,  .d-col-4.d-sn-left.d-sn-right{ margin-right: 0px; margin-left: 0px; width: 33.333%; }
+.d-col-5.d-sn-right.d-sn-left,  .d-col-5.d-sn-left.d-sn-right{ margin-right: 0px; margin-left: 0px; width: 41.666%; }
+.d-col-6.d-sn-right.d-sn-left,  .d-col-6.d-sn-left.d-sn-right{ margin-right: 0px; margin-left: 0px; width: 49.999%; }
+.d-col-7.d-sn-right.d-sn-left,  .d-col-7.d-sn-left.d-sn-right{ margin-right: 0px; margin-left: 0px; width: 58.333%; }
+.d-col-8.d-sn-right.d-sn-left,  .d-col-8.d-sn-left.d-sn-right{ margin-right: 0px; margin-left: 0px; width: 66.666%; }
+.d-col-9.d-sn-right.d-sn-left,  .d-col-9.d-sn-left.d-sn-right{ margin-right: 0px; margin-left: 0px; width: 74.999%; }
+.d-col-10.d-sn-right.d-sn-left, .d-col-10.d-sn-left.d-sn-right{ margin-right: 0px; margin-left: 0px; width: 83.333%; }
+.d-col-11.d-sn-right.d-sn-left, .d-col-11.d-sn-left.d-sn-right{ margin-right: 0px; margin-left: 0px; width: 91.666%; }
+.d-col-12.d-sn-right.d-sn-left, .d-col-12.d-sn-left.d-sn-right{ margin-right: 0px; margin-left: 0px; width: 99.999%; }
+.d-clear { clear: both; display: block; overflow: hidden; visibility: hidden; width: 0; height: 1px; }
+.d-text-center{ text-align: center; }
+.d-text-justify{ text-align: justify; }
+.d-text-left{  text-align: left;  }
+.d-text-right{ text-align: right; }
+/*
+@media only screen and (max-width: 600px) {
+  [class*="d-col-"]{
+    width: 100% !important;
+  }
+}
+*/

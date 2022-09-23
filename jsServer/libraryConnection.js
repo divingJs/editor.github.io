@@ -15,29 +15,12 @@ async function logout(user,session,action,socket){
 	var rtn = await dao.consulta({q:'updateSession',dato:[user,action,session,socket]});
 	return (JSON.parse(rtn)[0]);
 }
-
-
-
-
-
 async function dynamic(prmts){
 	var rtn = await dao.qds(prmts);
 	delete prmts['q'];
 	var nrtn = await dao.qPk({q:rtn,dato:prmts.d});
 	return ( JSON.parse(nrtn)[0]);
 }
-
-
-
-
-
-
-
-
-
-
-
-
 exports.login = login;
 exports.createUser = createLogin;
 exports.vMultiSession = updateSessionActive;

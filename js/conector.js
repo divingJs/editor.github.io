@@ -1,43 +1,52 @@
 var socket = io();
-async function call(url, clb){await fetch(url).then(function(response){return response.text();}).then(function(data){clb(data);}).catch(function(err){clb(err);});}
+
+async function call(url, clb){
+	await fetch(url).then(function(response){
+		return response.text();
+	}).then(function(data){
+		clb(data);
+	}).catch(function(err){
+		clb(err);
+	});
+}
+/*open dashboard*/
 function dashboard(retorno,consulta){
 	socket.emit('consulta','saludo',retorno,consulta);
 }
-function removeDashboard(){
-	dvn('#dashboard').remove();
-}
-async function clearDashboard(){
-	if(dvn('#dashboard').length>0){dvn('#dashboard').remove();}
-	dvn('body').append(dvn('<div>',{id:'dashboard',class:'d-dashboard'}));
-	return true;
-}
-socket.on('rtn_dashboard', async (rtn)=>{
-	await clearDashboard();
-	loadHref(dvn('#dashboard'),window.location.origin+rtn.content);
-	socket.emit('dataUser','loadDataUser');
-});
-socket.on('loadDataUser',async (rtn)=>{
-	if(rtn.length>0 ){
-		controlEditor.datosUser = rtn;
+	socket.on('rtn_dashboard', async (rtn)=>{
+		await clearDashboard();
+		loadHref(dvn('#dashboard'),window.location.origin+rtn.content);
+		socket.emit('dataUser','loadDataUser');
+	});
+	function removeDashboard(){
+		dvn('#dashboard').remove();
 	}
-});
+	async function clearDashboard(){
+		if(dvn('#dashboard').length>0){
+			dvn('#dashboard').remove();
+		}dvn('body').append(dvn('<div>',{
+			id:'dashboard'}));return true;
+	}
+	socket.on('loadDataUser',async (rtn)=>{
+		if(rtn.length>0 ){
+			controlEditor.datosUser = rtn;
+		}});
+
+
 socket.on( 'rtn_login', async (rtn)=>{
 	if(dvn('#loadLogin').length>0){dvn('#loadLogin').remove();}
 	dvn('body').prepend(dvn('<div>',{id:'loadLogin'}));
 	loadHref( dvn('#loadLogin'), window.location.origin=rtn.content );
 });
-async function encripta(clave){
-	await socket.emit('consulta','encriptado','rtnEncripta',clave);
-}
+async function encripta(clave){ await socket.emit('consulta','encriptado','rtnEncripta',clave);}
 socket.on('rtnEncripta',async (response)=>{
 	var usr = dvn('input[name=user]')[0].value;
 	call('/auth?user='+usr+'&pass='+response, function(rtn){
 		var arr = JSON.parse( rtn );
 		if( arr[0].isLogin == 1 ){
+			//console.log( controlEditor.datosUser, arr[0] );
 			controlEditor.datosUser=arr;
-			lgn( arr[0].user_str );
-			dvn('#loadLogin').remove();
-			dashboard('rtn_dashboard','dashboard');
+			lgn( arr[0].user_str );dvn('#loadLogin').remove();dashboard('rtn_dashboard','dashboard');
 		}else{
 			dvn('#errorLogin').attr('style','color:red;opacity:1;');
 			dvn('#errorLogin').append(dvn('<div>',{text: arr[0].msg}));
@@ -58,9 +67,7 @@ socket.on('rtnEncripta',async (response)=>{
 		}
 	});
 });
-async function createUser(pass){
-	await socket.emit('consulta','encriptado','rtnCreateuser',pass);
-}
+async function createUser(pass){await socket.emit('consulta','encriptado','rtnCreateuser',pass);}
 socket.on('rtnCreateuser',async (response)=>{
 	var usr_f   = dvn('input[name=usr_form]')[0].value;
 	var name_f  = dvn('input[name=name_form]')[0].value;
@@ -79,44 +86,10 @@ function createHTML(param,excJs){
 	var ifrm = dvn('#salida')[0].contentWindow;
 	var doc = ifrm.document;
 	var head='',body='';
-	if(param.hasOwnProperty("header") && excJs){
-		if(param.header.length>0){
-			doc.head.innerHTML = param.header;
-		}
-	}
-	if(param.hasOwnProperty("css")){
-		if(param.css.length>0){
-			if(!doc.querySelector('style[d-role=d-editor-style]')){
-				var css = dvn('<style>',{
-					type:'text/css','d-role':'d-editor-style',
-					text:param.css
-				});
-				doc.head.append(css[0]);
-			}else{
-				var s = doc.querySelector('style[d-role=d-editor-style]');
-				s.innerHTML = param.css;
-			}
-		}
-	}
+	if(param.hasOwnProperty("header") && excJs){if(param.header.length>0){doc.head.innerHTML = param.header;}}
+	if(param.hasOwnProperty("css")){if(param.css.length>0){if(!doc.querySelector('style[d-role=d-editor-style]')){var css = dvn('<style>',{type:'text/css','d-role':'d-editor-style',text:param.css});doc.head.append(css[0]);}else{var s = doc.querySelector('style[d-role=d-editor-style]');s.innerHTML = param.css;}}}
 	doc.body.innerHTML = (param.html)?(param.html.length>0)?param.html:'':'';
-	if(excJs){
-		socket.emit('consulta','evalJs','executeJs',((param.js)?(param.js.length>0)?param.js:'':''));
-		setTimeout(function(){
-			dvn.each(editorText.files,function(i,v){
-				if(v.type=="text/javascript"){
-					dvn('#salida')[0].contentWindow.eval(v.data);
-				/*}else if(v.type=="text/css"){
-					var css = dvn('<style>',{
-						type:'text/css','d-role':'d-editor-style',
-						text:v.data
-					});
-					dvn('#salida')[0].contentWindow.document.head.append(css[0]);
-					*/
-				}
-			});
-			dvn('#salida')[0].contentWindow.eval(editorText.js)
-		},500);
-	}
+	if(excJs){socket.emit('consulta','evalJs','executeJs',((param.js)?(param.js.length>0)?param.js:'':''));}
 }
 socket.on('executeJs',async (dt)=>{
 	if( dt.error == 0 ){
@@ -137,6 +110,7 @@ socket.on('executeJs',async (dt)=>{
 		frm.write(head);
 		frm.write(body);
 		frm.close();
+		setTimeout(function(){difrm.eval(editorText.js)},100);
 	}else{
 		generaAlerta(dt.message);
 
@@ -149,9 +123,12 @@ async function logout(){
 }
 function lgn(user){
 	socket.emit('lgn',user,function(rtn){
-		console.log( 'Bienvenido' );//<<<<---- si se recibe error se debe mandar el mensaje
+		console.log( 'Bienvenido' );
+		//<<<<---- si se recibe error se debe mandar el mensaje
 	});
 }
+
+
 function callback(params,callback){
 	socket.emit('collback','compart','consultaDatos',params,async(rtn)=>{callback(rtn);});
 }
@@ -221,13 +198,12 @@ async function updateFile(dato){
 		'updateFile',
 		dato,
 		async(rtn)=>{
-			console.log( rtn );
+			//console.log( rtn );
 		}
 		);
 }
 
 async function getFile(name,callback){
-	//console.log( name );
 	await socket.emit(
 	'collback',
 	'file',
@@ -254,9 +230,7 @@ function generaAlerta(mensaje){
 				document.body.append(al);
 			}
 			var msgs = JSON.parse(msg);
-			al.innerHTML="<div>Error at line: "+msgs[0].msg+
-						 "</div><div>"+msgs[1].msg+
-						 "</div><div>"+msgs[2].msg.replaceAll(' ','-')+"</div>";
+			al.innerHTML="<div>Error at line: "+msgs[0].msg+"</div><div>"+msgs[1].msg+"</div><div>"+msgs[2].msg.replaceAll(' ','-')+"</div>";
 			var x = document.createElement('EM');
 			x.classList='d-close icon-clearclose';
 			x.onclick = function(){

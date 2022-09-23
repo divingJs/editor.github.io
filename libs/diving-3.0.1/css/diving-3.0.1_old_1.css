@@ -15,11 +15,9 @@
 .d-selected{background-color: #404040 !important;  color: #f5f0f0; }
 /*article*/
 .d-article {border: solid 1px #0d0d0d33;padding: 0.5em;border-radius: 3px;margin: 3px;box-shadow: 1px 1px 2px #b3b1b1;display: flow-root;}
-.d-article .d-article-header  {font-size: larger;border-bottom: solid 1px #3a3a3a22;padding: 0.5em;}
-.d-article .d-article-aside   {border-right: solid 1px #0d0d0d33; padding: 0.5em; font-size: small;}
-.d-article .d-article-section {font-size: medium;text-align: justify;padding: 0.5em;line-height: normal;}/* width:fit-content;}*/
-.d-article .d-article-footer {border-top:solid 1px #0d0d0d33;padding: 0.5em;font-size:small;}
-.d-article>.d-article-section>.d-article-aside{margin-right:0.5em;display: flex;}
+.d-article .d-article-header {font-size: larger;border-bottom: solid 1px #3a3a3a22;padding: 0.5em;}
+.d-article .d-article-section {font-size: medium;text-align: justify;padding: 0.5em;line-height: normal;}
+.d-article .d-article-footer {/*display: flow-root;*/}
 /**button **/
 .d-button{background:none;float:left;border:none;}
 .d-button>button[type=default]{  padding:0.5em 1em;border-radius:0px;border:0px;cursor:pointer;background-color:#f1f1f1;color:#000000;}
@@ -38,9 +36,9 @@ button[disabled="disabled"]{cursor:not-allowed !important;}
 .d-fixed-footer{position: fixed;bottom: 0;display: flow-root; background-color: var( --bg-master ); }
 .d-fixed-header{position: fixed;top: 0;display: flow-root; background-color: var( --bg-master ); }
 /*Notifications*/
-.d-notification {width: max-content;display: inline;position: relative;border-radius: 5px;margin: 5px;}
+.d-notification {width: max-content;display: inline;position: relative;border-radius: 5px;}
 .d-notification>em:hover{background-color:#40404033;}
-.d-notification>em {position: absolute;top: 1.5em;left: 0.5em;cursor: pointer;z-index: 1;}
+.d-notification>em {position: absolute;top: 0.5em;left: 0.5em;cursor: pointer;z-index: 1;}
 .d-notification .d-success{   padding:1em 1em 1em 2em; background-color:#28a745;color:#ffffff;border-radius: 5px;}
 .d-notification .d-primary{   padding:1em 1em 1em 2em; background-color:#0062cc;color:#bbc4dc;border-radius: 5px;}
 .d-notification .d-secondary{ padding:1em 1em 1em 2em; background-color:#6c757d;color:#0d2b46;border-radius: 5px;}
@@ -75,13 +73,13 @@ button[disabled="disabled"]{cursor:not-allowed !important;}
     width: -webkit-fill-available;
 }
 .d-moreLess {
-    border: solid 1px #bbb8b8;
+    /* border: solid 1px #bbb8b8; */
     width: 1em;
-    padding: 0.35em;
-    background-color: #e2e2e2;
+    padding: 0.5em;
+    /* background-color: #e2e2e2; */
     float: right;
     text-align: center;
-    top: -2.01em;
+    top: -2.0em;
     position: relative;
     cursor: pointer;
 }
@@ -157,9 +155,6 @@ ul#resultado {
 
 
 
-
-
-
 .d-window-content{
     position:relative;
     border: solid 1px black;
@@ -193,3 +188,43 @@ ul#resultado {
 .d-window-actions em:hover{
     cursor: pointer;
 }
+
+/*
+.d-window-content {
+    width: 500px;
+    position: absolute;
+    background-color: white;
+    border: solid 1px;
+    z-index: 10000;
+}
+.d-window-title {
+    background-color: #404040;
+    color: lightgray;
+    padding: 0.5em;
+}
+
+.d-window-title .d-window-action {
+    float: right;
+    top: -1em;
+    cursor: pointer;
+    position: relative;
+    font-size: 1.25em;
+}
+.d-window-body {
+    padding: 1.25em 0.5em;
+}
+
+div[d-role=resizeWindow]{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 1em;
+    cursor: se-resize;
+    height: 1em;
+    background-color: transparent;
+}
+*/
+
+
+
+

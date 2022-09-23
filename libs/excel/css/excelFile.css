@@ -1,0 +1,25 @@
+.d-upload{
+     border: solid 1px;
+     padding: 1em;
+}
+
+.d-upload{
+ border: solid 1px;
+ cursor: pointer;
+ }
+.d-upload div["d-element"="drag_upload_file"]{
+ height: 3em;
+ padding: 1em;
+ }
+.d-upload input[type=file]{
+ display: none;
+ }
+
+#btninfo{
+     border: solid 1px;
+     width: max-content;
+     padding: 1em;
+}
+.d-hidden{
+     display: none;
+}

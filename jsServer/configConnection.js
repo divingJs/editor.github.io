@@ -1,8 +1,11 @@
 const util =require('util');
 const mysql=require('mysql');
-//const config={host:'localhost',user:'editor_db',password:'3d170&_d474b453',database:"editor_db"};
-//const config={host:'192.168.0.5',user:'usr_dvn_data',password:'d474b453',database:"divingjs"};
-const config={host:'localhost',user:'d1vin6',password:'D4748453',database:"divingjs"};
+const config={
+	host:'localhost',
+	user:'d1vin6',
+	password:'D4748453',
+	database:"divingjs"
+};
 var sql={
 	login: 'call sp_isLogin(?,?)',
 	insertUser: 'call sp_create_user(?,?,?,?)',

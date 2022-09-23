@@ -1,22 +1,18 @@
-var editorText = {files:[]};
+var editorText = {};
 var controlEditor = {
 	theme: 'default',
-	indent: '2'
+    indent: '2'
 };
 function preguntarAntesDeSalir(){
 	return "¿Seguro que quieres salir?";
 }
-/**
- * inicio axdb1
- * preparacion de entrada al editor
- */
 dvn('body').append(
 	dvn('<div>',{
 		class:'d-content-engrane'
 	}).append(
 		dvn('<div>',{
 			id:'engrane',
-			class:'icon-cog d-engrane',
+			class:'icon-menu6 d-engrane',
 			dblclick:function(){
 				dvn('#engrane').addClass('d-hidden');
 				dashboard('rtn_dashboard','dashboard');
@@ -37,21 +33,30 @@ dvn('#area').append(
 		style:'height: '+window.innerHeight+'px'
 	})
 );
+
 window.onresize=function(){
 	dvn('#salida').attr('style','height: '+window.innerHeight+'px');
 	dvn('#contentDashboard').attr('style','height: '+(window.innerHeight-18)+'px');
-  	dvn('#accionesDashBoard').attr('style','height:'+window.innerHeight+'px');
+  	dvn('#accionesDashBoard').attr('style','height:'+(window.innerHeight-21)+'px');
 //	dvn(dvn('#engrane')[0].parentNode).center();
 }
-/*fin axdb1 */
+
 function createCode(){
 	if(dvn('#contentEditor').length>0){
 		dvn('#contentEditor').removeClass('d-hidden');
 	}else{
 		dvn('body').prepend(
-			dvn('<div>',{id:'contentEditor'})
-				.append(dvn('<div>',{id:'contentTextArea'}))
-				.append(dvn('<div>',{id:'tabEditor'}))
+			dvn('<div>',{
+				id:'contentEditor'
+			}).append(
+				dvn('<div>',{
+					id:'contentTextArea'
+				})
+			).append(
+				dvn('<div>',{
+					id:'tabEditor'
+				})
+			)
 		);
 		var cnt = [];
 		diving.each("txtHeader txtHtml txtCss txtJs".split(' '),function(i,v){
@@ -60,9 +65,7 @@ function createCode(){
 			if(i==0){obj.open=true;}
 			cnt.push(obj);
 		});
-		dvn('#tabEditor').divTabsTrip({
-			content:cnt
-		});
+		dvn('#tabEditor').divTabsTrip({content:cnt});
 		var tts = dvn('#tabEditor').data('divTabsTrip');
 		dvn(tts.elem).click(function(e){
 			if(!diving.className.has(e.target,'d-title-item')) return;
@@ -84,25 +87,30 @@ function createCode(){
 			modal: false,
 			actions:['close','minimize','maximize'],
 			content: dvn('#tabEditor'),
-			resize: function(x,y){
+			resize: function(){
+				var cedt = dvn('#contentEditor').data('divWindow');
 				var edtrs = dvn('body')[0].querySelectorAll('.CodeMirror');
+				var y = diving(cedt).find('div[d-role=divWindow]')[0].getBoundingClientRect().height;
 				dvn.each(edtrs,function(i,v){
 					dvn(v).attr("style","height:"+(y-97)+"px");
 				});
-			}
+			},
+			width:600,
+			height:400
 		});
 		var w = dvn('#contentEditor').data('divWindow');
 		dvn(dvn('#contentEditor')[0].querySelector('.d-window-content')).center();
 		dvn('#contentEditor').attr('style','position: absolute;width:0px;height:0px;');
 	}
 }
+
 function createArea(content,ident){
 	content.append(dvn('<div>',{id:ident}));
 	dvn('#'+ident).divText({
 		multiple:{
 			resize:false
 		},
-		text:/txtHeader/.test(ident)?'<!-- libs and stylesheets here -->\n'+((editorText.header!=undefined)?editorText.header:''):
+		text:/txtHeader/.test(ident)?((editorText.header!=undefined)?editorText.header:''):/*'<!-- libs and stylesheets here -->\n'+*/
 			 /txtHtml/.test(ident)?((editorText.hasOwnProperty('html'))?editorText.html:''):
 			 /txtCss/.test(ident)?((editorText.hasOwnProperty('css'))?editorText.css:''):
 			 /txtJs/.test(ident)?((editorText.hasOwnProperty('js'))?editorText.js:''):''
@@ -128,18 +136,13 @@ function createArea(content,ident){
 				}
 			}
 	    },
-	    foldGutter: true,
-	    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-	    matchTags: {bothTags: true},
 	    indentUnit:5
 	});
-	setTimeout(
-		function(){
-			var cntCdMirror=dvn('#tabEditor')[0].querySelectorAll('div[d-role=contenido]')[0];
-			var dWb = dvn(cntCdMirror)[0].querySelectorAll('.CodeMirror-scroll')[0].parentNode.CodeMirror;
-			dWb.focus();
-		},
-	100);
+	setTimeout(function(){
+		var cntCdMirror=dvn('#tabEditor')[0].querySelectorAll('div[d-role=contenido]')[0];
+		var dWb = dvn(cntCdMirror)[0].querySelectorAll('.CodeMirror-scroll')[0].parentNode.CodeMirror;
+		dWb.focus();
+	},100);
 	editor.on('change',function(e){
 		var value = editor.getValue();
 		editorText[ident.toLowerCase().replace('txt','')]=value;
@@ -375,13 +378,6 @@ function getCompare(config){
 	'  </body>\n'+  
 	'</html>';
 }
-
-
-
-
-
-
-
 
 function generateName(){
 	var simbolos, color;
